@@ -1,0 +1,22 @@
+service: challengeRatingCalculator
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+
+functions:
+  challengeRatingCalculator:
+    memorySize: 128
+    handler: src/cleverorc/calc.cr
+    events:
+      - http:
+          path: crCalculator/{type}/{value}
+          method: get
+          cors: true
+      - http:
+          path: crCalculator/
+          method: post
+          cors: true
