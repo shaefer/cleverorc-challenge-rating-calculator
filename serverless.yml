@@ -2,6 +2,8 @@ service: challengeRatingCalculator
 
 frameworkVersion: ">=1.1.0 <2.0.0"
 
+plugins:
+  - serverless-bundle
 provider:
   name: aws
   runtime: nodejs12.x

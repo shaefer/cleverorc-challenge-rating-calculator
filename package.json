@@ -4,5 +4,8 @@
     "description": "Pathfinder CR Calculator",
     "author": "",
     "license": "MIT",
-    "dependencies": {}
+    "dependencies": {},
+    "devDependencies": {
+        "serverless-bundle": "^1.7.0"
+    }
 }
