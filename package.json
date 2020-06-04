@@ -2,7 +2,7 @@
     "name": "challenge-rating-calculator",
     "version": "1.0.0",
     "description": "Pathfinder CR Calculator",
-    "author": "",
+    "author": "daniel shaefer",
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {

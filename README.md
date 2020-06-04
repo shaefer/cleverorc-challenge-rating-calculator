@@ -8,7 +8,8 @@ Getting started with Lambda isn't hard at all. But if you are shooting for a sup
 ## Do this first (prerequisites): 
 - [Follow Serverless setup guide](https://www.serverless.com/framework/docs/providers/aws/guide/installation/) for 3 things:
     1. Install Node
-    1. Install Serverless
+    1. Install Serverless `npm install -g serverless`
+        1. Install Webpack plugin: `serverless plugin install --name serverless-bundle` go to the [serverless docs](https://www.serverless.com/framework/docs/providers/aws/cli-reference/plugin-install/) for more details/info:
     1. Setup AWS - mostly setting up credentials
 
 ## Getting Started
