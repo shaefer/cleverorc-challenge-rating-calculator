@@ -1,4 +1,4 @@
-const postableBody2 = {
+const postableBody = {
     hp: 10,
     ac: 10,
     toHit: 5,
@@ -11,3 +11,4 @@ const postableBody2 = {
     isCombat: true,
     isCaster: false
 }
+console.log(JSON.stringify(postableBody));

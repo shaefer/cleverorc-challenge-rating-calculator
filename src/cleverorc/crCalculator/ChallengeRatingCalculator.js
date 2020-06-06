@@ -1,19 +1,28 @@
 import MonsterStatsByCR from './MonsterStatsByCR';
 import {IsFortSaveGood, IsRefSaveGood, IsWillSaveGood, sum, roundDecimal} from './AdvancementUtils';
 
+/**
+ * Calculate CR based on a creature type. Creature type just helps ease the work of passing in whether each save should be a good save or a poor save.
+ * This affects how the CR is determined as we expect poor saves to increase more slowly than good saves.
+ * Passing in just the fields you want to calculate will result in output of just the fields you calculate. Saves are all or nothing just for simplicity.
+ * This function calls the core calculateCR function.
+ * @param { destructured object for ease of refactoring
+ *          creatureType name of creature type to be translated into which of the 3 saves are good.
+ *               humanoid and outsiders are interesting but can be calculated or set explicitly
+ *          isCombat determines if toHit and damage should use the higher expectations for CR.
+ *          isCaster determines if avgAbilityDC should use the higher expectations for CR.
+ * } param0
+ */
 export const calculateCRForCreatureType = ({hp, ac, toHit, avgDamage, fort, reflex, will, avgAbilityDC, creatureType, isCombat = true, isCaster = false}) => {
+    //creature type can be humanoid or outsider which have various flavors of which saving throws are good. We either need to explicitly define the type or make sure that the user chooses which saves are good vs bad.
     const saves = getGoodVsPoorSaves(creatureType, fort, reflex, will);
-    return calculateCR(hp, ac, toHit, avgDamage, avgAbilityDC, fort, reflex, will, saves.fortGood, saves.refGood, saves.willGood, isCombat, isCaster);
+    return calculateCR({hp, ac, toHit, avgDamage, avgAbilityDC, fort, reflex, will, isFortSaveGood: saves.fortGood, isReflexSaveGood: saves.refGood, isWillSaveGood: saves.willGood, isCombat, isCaster});
 };
 
 export const calculateCR = ({hp, ac, toHit, avgDamage, avgAbilityDC, fort, reflex, will, isFortSaveGood, isReflexSaveGood, isWillSaveGood, isCombat = true, isCaster = false}) => {
     //we need creatureType to determine good or poor saves for each of the 3 saves.
     //we need role of caster or melee to determine if we should rate the CR based on the high or low values for toHit, damage, and  avgAbilityDC
     //roles: combat, caster, other...with other you will end with false on both and get judged on all the low end cr calculations which sounds right.
-
-    //creature type can be humanoid or outsider which have various flavors of which saving throws are good. We either need to explicitly define the type or make sure that the user chooses which saves are good vs bad.
-
-
     let outputObj = {};
     let calculatedCrs = [];
 
@@ -22,7 +31,7 @@ export const calculateCR = ({hp, ac, toHit, avgDamage, avgAbilityDC, fort, refle
         calculatedCrs.push(hpCr);
         outputObj = {
             ...outputObj,
-            hp: hpCr
+            hpCr
         };
     }
     if (typeof ac !== 'undefined') {
@@ -30,7 +39,7 @@ export const calculateCR = ({hp, ac, toHit, avgDamage, avgAbilityDC, fort, refle
         calculatedCrs.push(acCr);
         outputObj = {
             ...outputObj,
-            ac: acCr
+            acCr
         };
     }
     if (typeof toHit !== 'undefined') {
@@ -38,7 +47,7 @@ export const calculateCR = ({hp, ac, toHit, avgDamage, avgAbilityDC, fort, refle
         calculatedCrs.push(attackCr);
         outputObj = {
             ...outputObj,
-            toHit: attackCr
+            toHitCr: attackCr
         };
     }
     if (typeof avgDamage !== 'undefined') {
@@ -46,7 +55,7 @@ export const calculateCR = ({hp, ac, toHit, avgDamage, avgAbilityDC, fort, refle
         calculatedCrs.push(dmgCr);
         outputObj = {
             ...outputObj,
-            damage: dmgCr
+            damageCr: dmgCr
         };
     }
     if (typeof avgAbilityDC !== 'undefined') {
@@ -54,25 +63,24 @@ export const calculateCR = ({hp, ac, toHit, avgDamage, avgAbilityDC, fort, refle
         calculatedCrs.push(abilityDcCr);
         outputObj = {
             ...outputObj,
-            abilityDC: abilityDcCr
+            abilityDcCr: abilityDcCr
         };
     }
     if (typeof fort !== 'undefined' && typeof reflex !== 'undefined' && typeof will !== 'undefined') {
         const saveCrs = calculatedSaveDcs(fort, reflex, will, isFortSaveGood, isReflexSaveGood, isWillSaveGood);
         if (saveCrs) {
-            calculatedCrs.push(saveCrs.saves);
+            calculatedCrs.push(saveCrs.savesCr);
         }
         outputObj = {
             ...outputObj,
             ...saveCrs
         };
     }
-
     const aggregateCr =sum(calculatedCrs) / calculatedCrs.length;
     const calculatedCr = roundDecimal(aggregateCr);
     outputObj = {
         ...outputObj,
-        total: calculatedCr
+        calculatedCr: calculatedCr
     };
     return outputObj;
 };
@@ -109,10 +117,10 @@ const calculatedSaveDcs = (fortSave, refSave, willSave, isFortSaveGood, isReflex
 
     const saveCr = roundDecimal((fortCr + refCr + willCr) / 3);
     return {
-        saves:saveCr,
-        fort:fortCr,
-        ref:refCr,
-        will:willCr
+        savesCr:saveCr,
+        fortCr:fortCr,
+        reflexCr:refCr,
+        willCr:willCr
     };
 };
 

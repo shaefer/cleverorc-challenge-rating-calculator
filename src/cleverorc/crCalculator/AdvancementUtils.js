@@ -19,6 +19,7 @@ export const IsWillSaveGood = (creatureType) => {
 export const getCreatureTypeInfo = (creatureType) => {
     const creatureTypeInfo = creatureStatsByType.find(x => x.creature_type.toLowerCase() === creatureType.toLowerCase());
     if (!creatureTypeInfo) throw `creatureType: ${creatureType} was not found.`;
+    return creatureTypeInfo;
 };
 
 export const roundDecimal = (num) => {
