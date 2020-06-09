@@ -1,4 +1,4 @@
-# serverless_example
+# challenge_rating_calculator
 
 https://www.serverless.com/blog/cicd-for-serverless-part-1/
 https://www.serverless.com/blog/cicd-for-serverless-part-2/

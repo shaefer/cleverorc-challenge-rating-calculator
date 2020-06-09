@@ -120,7 +120,10 @@ const calculatedSaveDcs = (fortSave, refSave, willSave, isFortSaveGood, isReflex
         savesCr:saveCr,
         fortCr:fortCr,
         reflexCr:refCr,
-        willCr:willCr
+        willCr:willCr,
+        isFortSaveGood,
+        isReflexSaveGood,
+        isWillSaveGood
     };
 };
 

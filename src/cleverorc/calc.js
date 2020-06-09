@@ -26,9 +26,13 @@ export const cr = (event, context, callback) => {
 
   const crOutput = (data.crData.creatureType) ? calculateCRForCreatureType(data.crData) : calculateCR(data.crData);
   console.log(crOutput);
+  const finalOutput = {
+    inputs: data,
+    outputs: crOutput
+  };
   const response = {
       statusCode: '200',
-      body: `Call endpoint with info ${data.type}, ${JSON.stringify(data)}`,
+      body: `Call endpoint with info ${data.type}, ${JSON.stringify(finalOutput)}`,
   };
   callback(null, response);
 };
