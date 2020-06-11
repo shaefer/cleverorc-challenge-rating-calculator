@@ -10,7 +10,7 @@ provider:
   region: us-west-2
 
 functions:
-  challengeRatingCalculator:
+  calc:
     memorySize: 128
     handler: src/cleverorc/calc.cr
     events:

@@ -3,10 +3,10 @@ import {calculateCRForCreatureType, calculateCR} from './crCalculator/ChallengeR
 const getCrDataFromEvent = (event) => {
   //Assuming two api endpoints defined in serverless.yml
   //a get with pathParameters via: crCalculator/{type}/{value}
-  //a post with a body via: crCalculator/
+  //a post with a body via: crCalculator/ --currently the invoke local sends an object event.body while the actual post via postman sends a string that must be parsed to JSON.
   const data = (event.body)
   ? {
-    crData: event.body,
+    crData: typeof event.body === 'string' ? JSON.parse(event.body) : event.body,
     type: 'post'
   }
   : {
@@ -21,7 +21,8 @@ const getCrDataFromEvent = (event) => {
 export const cr = (event, context, callback) => {
   //useful bits event.pathParameters.{pathParamName}
   //more useful bits event.queryParameters.{queryParamName}
-  console.log(event.body);
+  console.log("Event Body", event.body);
+  console.log(typeof event.body);
   const data = getCrDataFromEvent(event);
 
   const crOutput = (data.crData.creatureType) ? calculateCRForCreatureType(data.crData) : calculateCR(data.crData);
@@ -32,7 +33,7 @@ export const cr = (event, context, callback) => {
   };
   const response = {
       statusCode: '200',
-      body: `Call endpoint with info ${data.type}, ${JSON.stringify(finalOutput)}`,
+      body: JSON.stringify(finalOutput),
   };
   callback(null, response);
 };
